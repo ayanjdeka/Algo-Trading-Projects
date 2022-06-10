@@ -9,7 +9,7 @@ def main():
     liquid_provider_to_gateway = deque()
     order_book_to_trading_strategy = deque()
     trading_strategy_to_order_manager = deque()
-    ms_2_om = deque()
+    market_strategy_to_order_manager = deque()
     order_manager_to_trading_strategy = deque()
     gateway_to_order_manager = deque()
     order_manager_to_gateway = deque()

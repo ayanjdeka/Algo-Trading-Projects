@@ -11,7 +11,7 @@ class TestTradingSimulation(unittest.TestCase):
         self.liquid_provider_to_gateway=deque()
         self.order_book_to_trading_strategy = deque()
         self.trading_strategy_to_order_manager = deque()
-        self.ms_2_om = deque()
+        self.market_strategy_to_order_manager = deque()
         self.order_manager_to_trading_strategy = deque()
         self.gateway_to_order_manager = deque()
         self.order_manager_to_gateway = deque()
