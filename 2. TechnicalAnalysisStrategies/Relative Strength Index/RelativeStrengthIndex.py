@@ -2,15 +2,12 @@ import pandas as pd
 
 from pandas_datareader import data
 
-start_date = '2017-01-01'
-end_date = '2020-01-01'
-SRC_DATA_FILENAME = 'goog_data.pkl'
+import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+msft_data_frame = yf.download('MSFT', start = start_date, end = end_date)
 
-
-
-goog_data = data.DataReader('MSFT', 'yahoo', start_date, end_date)
-
-close = goog_data['Close']
+close = msft_data_frame['Close']
 
 '''
 The relative strength index looks at the recent gains and losses, and then
@@ -51,15 +48,15 @@ for close_price in close:
     rsi = 100 - (100 / (1+rs))
     rsi_values.append(rsi)
 
-goog_data = goog_data.assign(ClosePrice=pd.Series(close, index=goog_data.index))
-goog_data = goog_data.assign(RelativeStrengthAvgGainOver20Days=pd.Series(avg_gain_values, index=goog_data.index))
-goog_data = goog_data.assign(RelativeStrengthAvgLossOver20Days=pd.Series(avg_loss_values, index=goog_data.index))
-goog_data = goog_data.assign(RelativeStrengthIndicatorOver20Days=pd.Series(rsi_values, index=goog_data.index))
+msft_data_frame = msft_data_frame.assign(ClosePrice=pd.Series(close, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(RelativeStrengthAvgGainOver20Days=pd.Series(avg_gain_values, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(RelativeStrengthAvgLossOver20Days=pd.Series(avg_loss_values, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(RelativeStrengthIndicatorOver20Days=pd.Series(rsi_values, index=msft_data_frame.index))
 
-close_price = goog_data['ClosePrice']
-rs_gain = goog_data['RelativeStrengthAvgGainOver20Days']
-rs_loss = goog_data['RelativeStrengthAvgLossOver20Days']
-rsi = goog_data['RelativeStrengthIndicatorOver20Days']
+close_price = msft_data_frame['ClosePrice']
+rs_gain = msft_data_frame['RelativeStrengthAvgGainOver20Days']
+rs_loss = msft_data_frame['RelativeStrengthAvgLossOver20Days']
+rsi = msft_data_frame['RelativeStrengthIndicatorOver20Days']
 
 import matplotlib.pyplot as plt
 

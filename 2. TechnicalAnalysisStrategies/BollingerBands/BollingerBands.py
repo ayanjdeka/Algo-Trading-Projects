@@ -2,15 +2,12 @@ import pandas as pd
 
 from pandas_datareader import data
 
-start_date = '2017-01-01'
-end_date = '2020-01-01'
-SRC_DATA_FILENAME = 'goog_data.pkl'
+import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+msft_data_frame = yf.download('MSFT', start = start_date, end = end_date)
 
-
-
-goog_data = data.DataReader('MSFT', 'yahoo', start_date, end_date)
-
-close = goog_data['Close']
+close = msft_data_frame['Close']
 
 '''
 Bollinger Bands incorporate recent price volatality that makes it more 
@@ -46,15 +43,15 @@ for close_price in close:
     upper_band.append(sma + stdev_factor * stdev)
     lower_band.append(sma - stdev_factor * stdev)
 
-goog_data = goog_data.assign(ClosePrice=pd.Series(close, index=goog_data.index))
-goog_data = goog_data.assign(MiddleBollingerBand20DaySMA=pd.Series(sma_values, index=goog_data.index))
-goog_data = goog_data.assign(UpperBollingerBand20DaySMA2StdevFactor=pd.Series(upper_band, index=goog_data.index))
-goog_data = goog_data.assign(LowerBollingerBand20DaySMA2StdevFactor=pd.Series(lower_band, index=goog_data.index))
+msft_data_frame = msft_data_frame.assign(ClosePrice=pd.Series(close, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(MiddleBollingerBand20DaySMA=pd.Series(sma_values, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(UpperBollingerBand20DaySMA2StdevFactor=pd.Series(upper_band, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(LowerBollingerBand20DaySMA2StdevFactor=pd.Series(lower_band, index=msft_data_frame.index))
 
-close_price = goog_data['ClosePrice']
-mband = goog_data['MiddleBollingerBand20DaySMA']
-uband = goog_data['UpperBollingerBand20DaySMA2StdevFactor']
-lband = goog_data['LowerBollingerBand20DaySMA2StdevFactor']
+close_price = msft_data_frame['ClosePrice']
+mband = msft_data_frame['MiddleBollingerBand20DaySMA']
+uband = msft_data_frame['UpperBollingerBand20DaySMA2StdevFactor']
+lband = msft_data_frame['LowerBollingerBand20DaySMA2StdevFactor']
 
 import matplotlib.pyplot as plt
 

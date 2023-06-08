@@ -1,16 +1,13 @@
 import pandas as pd
 
 from pandas_datareader import data
+import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+goog_data_frame = yf.download('GOOG', start = start_date, end = end_date)
 
-start_date = '2017-01-01'
-end_date = '2020-01-01'
-SRC_DATA_FILENAME = 'goog_data.pkl'
 
-
-
-goog_data = data.DataReader('MSFT', 'yahoo', start_date, end_date)
-
-close = goog_data['Close']
+close = goog_data_frame['Close']
 
 #purpose of the absolute price oscillator is to compute the difference between EMAslow and EMAfast
 #large difference can mean instruments are trending or breaking out, or prices are far away from the equillibrium prices
@@ -43,15 +40,15 @@ for price in close:
 
 #magnitude of the apo values show the severity of the breakout
 
-goog_data = goog_data.assign(ClosePrice=pd.Series(close, index=goog_data.index))
-goog_data = goog_data.assign(FastExponential10DayMovingAverage=pd.Series(ema_fast_values, index=goog_data.index))
-goog_data = goog_data.assign(SlowExponential40DayMovingAverage=pd.Series(ema_slow_values, index=goog_data.index))
-goog_data = goog_data.assign(AbsolutePriceOscillator=pd.Series(apo_values, index=goog_data.index))
+goog_data_frame = goog_data_frame.assign(ClosePrice=pd.Series(close, index=goog_data_frame.index))
+goog_data_frame = goog_data_frame.assign(FastExponential10DayMovingAverage=pd.Series(ema_fast_values, index=goog_data_frame.index))
+goog_data_frame = goog_data_frame.assign(SlowExponential40DayMovingAverage=pd.Series(ema_slow_values, index=goog_data_frame.index))
+goog_data_frame = goog_data_frame.assign(AbsolutePriceOscillator=pd.Series(apo_values, index=goog_data_frame.index))
 
-close_price = goog_data['ClosePrice']
-ema_f = goog_data['FastExponential10DayMovingAverage']
-ema_s = goog_data['SlowExponential40DayMovingAverage']
-apo = goog_data['AbsolutePriceOscillator']
+close_price = goog_data_frame['ClosePrice']
+ema_f = goog_data_frame['FastExponential10DayMovingAverage']
+ema_s = goog_data_frame['SlowExponential40DayMovingAverage']
+apo = goog_data_frame['AbsolutePriceOscillator']
 
 import matplotlib.pyplot as plt
 

@@ -2,15 +2,12 @@ import pandas as pd
 
 from pandas_datareader import data
 
-start_date = '2017-01-01'
-end_date = '2020-01-01'
-SRC_DATA_FILENAME = 'goog_data.pkl'
+import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+msft_data_frame = yf.download('MSFT', start = start_date, end = end_date)
 
-
-
-goog_data = data.DataReader('MSFT', 'yahoo', start_date, end_date)
-
-close = goog_data['Close']
+close = msft_data_frame['Close']
 
 '''
 Standard deviation calculates the voltatility of a stock. Larger STDEVs 
@@ -40,11 +37,11 @@ for close_price in close:
 
     stddev_values.append(stdev)
 
-goog_data = goog_data.assign(ClosePrice=pd.Series(close, index=goog_data.index))
-goog_data = goog_data.assign(StandardDeviationOver20Days=pd.Series(stddev_values, index=goog_data.index))
+msft_data_frame = msft_data_frame.assign(ClosePrice=pd.Series(close, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(StandardDeviationOver20Days=pd.Series(stddev_values, index=msft_data_frame.index))
 
-close_price = goog_data['ClosePrice']
-stddev = goog_data['StandardDeviationOver20Days']
+close_price = msft_data_frame['ClosePrice']
+stddev = msft_data_frame['StandardDeviationOver20Days']
 
 import matplotlib.pyplot as plt
 

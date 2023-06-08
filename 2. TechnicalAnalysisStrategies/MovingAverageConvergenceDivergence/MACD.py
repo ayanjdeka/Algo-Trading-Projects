@@ -3,15 +3,15 @@ import pandas as pd
 from pandas_datareader import data
 import yfinance as yf
 
-start_date = '2001-01-01'
-end_date = '2021-01-01'
-SRC_DATA_FILENAME = 'goog_data.pkl'
+start_date = '2018-01-01'
+end_date = '2023-05-01'
+SRC_DATA_FILENAME = 'msft_data_frame.pkl'
 
 
 
-goog_data = yf.download('MSFT', start = start_date, end = end_date)
+msft_data_frame = yf.download('MSFT', start = start_date, end = end_date)
 
-close = goog_data['Close']
+close = msft_data_frame['Close']
 num_periods_fast = 10 # fast EMA time period
 K_fast = 2 / (num_periods_fast + 1) # fast EMA smoothing factor
 ema_fast = 0
@@ -48,19 +48,19 @@ for close_price in close:
   macd_signal_values.append(ema_macd)
   macd_historgram_values.append(macd - ema_macd)
 
-goog_data = goog_data.assign(ClosePrice=pd.Series(close, index=goog_data.index))
-goog_data = goog_data.assign(FastExponential10DayMovingAverage=pd.Series(ema_fast_values, index=goog_data.index))
-goog_data = goog_data.assign(SlowExponential40DayMovingAverage=pd.Series(ema_slow_values, index=goog_data.index))
-goog_data = goog_data.assign(MovingAverageConvergenceDivergence=pd.Series(macd_values, index=goog_data.index))
-goog_data = goog_data.assign(Exponential20DayMovingAverageOfMACD=pd.Series(macd_signal_values, index=goog_data.index))
-goog_data = goog_data.assign(MACDHistorgram=pd.Series(macd_historgram_values, index=goog_data.index))
+msft_data_frame = msft_data_frame.assign(ClosePrice=pd.Series(close, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(FastExponential10DayMovingAverage=pd.Series(ema_fast_values, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(SlowExponential40DayMovingAverage=pd.Series(ema_slow_values, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(MovingAverageConvergenceDivergence=pd.Series(macd_values, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(Exponential20DayMovingAverageOfMACD=pd.Series(macd_signal_values, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(MACDHistorgram=pd.Series(macd_historgram_values, index=msft_data_frame.index))
 
-close_price = goog_data['ClosePrice']
-ema_f = goog_data['FastExponential10DayMovingAverage']
-ema_s = goog_data['SlowExponential40DayMovingAverage']
-macd = goog_data['MovingAverageConvergenceDivergence']
-ema_macd = goog_data['Exponential20DayMovingAverageOfMACD']
-macd_histogram = goog_data['MACDHistorgram']
+close_price = msft_data_frame['ClosePrice']
+ema_f = msft_data_frame['FastExponential10DayMovingAverage']
+ema_s = msft_data_frame['SlowExponential40DayMovingAverage']
+macd = msft_data_frame['MovingAverageConvergenceDivergence']
+ema_macd = msft_data_frame['Exponential20DayMovingAverageOfMACD']
+macd_histogram = msft_data_frame['MACDHistorgram']
 
 import matplotlib.pyplot as plt
 

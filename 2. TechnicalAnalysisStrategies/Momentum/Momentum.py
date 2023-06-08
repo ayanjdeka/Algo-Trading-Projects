@@ -2,15 +2,12 @@ import pandas as pd
 
 from pandas_datareader import data
 
-start_date = '2017-01-01'
-end_date = '2020-01-01'
-SRC_DATA_FILENAME = 'goog_data.pkl'
+import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+msft_data_frame = yf.download('MSFT', start = start_date, end = end_date)
 
-
-
-goog_data = data.DataReader('MSFT', 'yahoo', start_date, end_date)
-
-close = goog_data['Close']
+close = msft_data_frame['Close']
 
 time_period = 20 
 history = [] 
@@ -24,11 +21,11 @@ for close_price in close:
   mom = close_price - history[0]
   mom_values.append(mom)
 
-goog_data = goog_data.assign(ClosePrice=pd.Series(close, index=goog_data.index))
-goog_data = goog_data.assign(MomentumFromPrice20DaysAgo=pd.Series(mom_values, index=goog_data.index))
+msft_data_frame = msft_data_frame.assign(ClosePrice=pd.Series(close, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(MomentumFromPrice20DaysAgo=pd.Series(mom_values, index=msft_data_frame.index))
 
-close_price = goog_data['ClosePrice']
-mom = goog_data['MomentumFromPrice20DaysAgo']
+close_price = msft_data_frame['ClosePrice']
+mom = msft_data_frame['MomentumFromPrice20DaysAgo']
 
 import matplotlib.pyplot as plt
 

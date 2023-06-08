@@ -2,15 +2,12 @@ import pandas as pd
 
 from pandas_datareader import data
 
-start_date = '2017-01-01'
-end_date = '2020-01-01'
-SRC_DATA_FILENAME = 'goog_data.pkl'
+import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+msft_data_frame = yf.download('MSFT', start = start_date, end = end_date)
 
-
-
-goog_data = data.DataReader('MSFT', 'yahoo', start_date, end_date)
-
-close = goog_data['Close']
+close = msft_data_frame['Close']
 
 import statistics as stats
 time_period = 20 # number of days over which to average
@@ -23,11 +20,11 @@ for close_price in close:
 
   sma_values.append(stats.mean(history))
 
-goog_data = goog_data.assign(ClosePrice=pd.Series(close, index=goog_data.index))
-goog_data = goog_data.assign(Simple20DayMovingAverage=pd.Series(sma_values, index=goog_data.index))
+msft_data_frame = msft_data_frame.assign(ClosePrice=pd.Series(close, index=msft_data_frame.index))
+msft_data_frame = msft_data_frame.assign(Simple20DayMovingAverage=pd.Series(sma_values, index=msft_data_frame.index))
 
-close_price = goog_data['ClosePrice']
-sma = goog_data['Simple20DayMovingAverage']
+close_price = msft_data_frame['ClosePrice']
+sma = msft_data_frame['Simple20DayMovingAverage']
 
 import matplotlib.pyplot as plt
 
