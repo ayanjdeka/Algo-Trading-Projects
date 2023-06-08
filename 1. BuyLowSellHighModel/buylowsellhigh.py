@@ -1,8 +1,8 @@
 from pandas_datareader import data
-start_date = '2014-01-01'
-end_date = '2018-01-01'
-goog_data = data.DataReader('GOOG', 'yahoo', start_date, end_date)
-
+import yfinance as yf
+start_date = '2020-01-01'
+end_date = '2023-05-01'
+goog_data = yf.download('GOOG', start = start_date, end = end_date)
 
 import numpy as np
 import pandas as pd

@@ -6,17 +6,13 @@ from sklearn.metrics import accuracy_score
 
 
 from pandas_datareader import data
-start_date = '2001-01-01'
-end_date = '2018-01-01'
+import yfinance as yf
+
+start_date = '2000-01-01'
+end_date = '2023-07-01'
 SRC_DATA_FILENAME='goog_data_large.pkl'
 
-try:
-    goog_data = pd.read_pickle(SRC_DATA_FILENAME)
-    print('File data found...reading GOOG data')
-except FileNotFoundError:
-    print('File not found...downloading the GOOG data')
-    goog_data = data.DataReader('GOOG', 'yahoo', start_date, end_date)
-    goog_data.to_pickle(SRC_DATA_FILENAME)
+goog_data = yf.download('GOOG', start = start_date, end = end_date)
 
 goog_data['Open-Close']=goog_data.Open-goog_data.Close
 goog_data['High-Low']=goog_data.High-goog_data.Low

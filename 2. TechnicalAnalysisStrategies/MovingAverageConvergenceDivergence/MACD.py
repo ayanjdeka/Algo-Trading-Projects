@@ -1,14 +1,15 @@
 import pandas as pd
 
 from pandas_datareader import data
+import yfinance as yf
 
-start_date = '2017-01-01'
-end_date = '2020-01-01'
+start_date = '2001-01-01'
+end_date = '2021-01-01'
 SRC_DATA_FILENAME = 'goog_data.pkl'
 
 
 
-goog_data = data.DataReader('MSFT', 'yahoo', start_date, end_date)
+goog_data = yf.download('MSFT', start = start_date, end = end_date)
 
 close = goog_data['Close']
 num_periods_fast = 10 # fast EMA time period
