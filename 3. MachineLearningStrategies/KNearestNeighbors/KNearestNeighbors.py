@@ -7,21 +7,18 @@ from sklearn.metrics import accuracy_score
 
 from pandas_datareader import data
 import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+google_data_frame = yf.download('GOOG', start = start_date, end = end_date)
 
-start_date = '2000-01-01'
-end_date = '2023-07-01'
-SRC_DATA_FILENAME='goog_data_large.pkl'
-
-goog_data = yf.download('GOOG', start = start_date, end = end_date)
-
-goog_data['Open-Close']=goog_data.Open-goog_data.Close
-goog_data['High-Low']=goog_data.High-goog_data.Low
-goog_data=goog_data.dropna()
-X=goog_data[['Open-Close','High-Low']]
-Y=np.where(goog_data['Close'].shift(-1)>goog_data['Close'],1,-1)
+google_data_frame['Open-Close']=google_data_frame.Open-google_data_frame.Close
+google_data_frame['High-Low']=google_data_frame.High-google_data_frame.Low
+google_data_frame=google_data_frame.dropna()
+X=google_data_frame[['Open-Close','High-Low']]
+Y=np.where(google_data_frame['Close'].shift(-1)>google_data_frame['Close'],1,-1)
 
 split_ratio=0.8
-split_value=int(split_ratio * len(goog_data))
+split_value=int(split_ratio * len(google_data_frame))
 X_train=X[:split_value]
 Y_train=Y[:split_value]
 X_test=X[split_value:]
@@ -36,9 +33,9 @@ accuracy_test = accuracy_score(Y_test, knn.predict(X_test))
 
 
 
-goog_data['Predicted_Signal']=knn.predict(X)
-goog_data['GOOG_Returns']=np.log(goog_data['Close']/
-                                 goog_data['Close'].shift(1))
+google_data_frame['Predicted_Signal']=knn.predict(X)
+google_data_frame['GOOG_Returns']=np.log(google_data_frame['Close']/
+                                 google_data_frame['Close'].shift(1))
 
 
 def calculate_return(df,split_value,symbol):
@@ -50,8 +47,8 @@ def calculate_strategy_return(df,split_value):
     cum_strategy_return = df[split_value:]['Strategy_Returns'].cumsum() * 100
     return cum_strategy_return
 
-cum_goog_return=calculate_return(goog_data,split_value=len(X_train),symbol='GOOG')
-cum_strategy_return= calculate_strategy_return(goog_data,split_value=len(X_train))
+cum_goog_return=calculate_return(google_data_frame,split_value=len(X_train),symbol='GOOG')
+cum_strategy_return= calculate_strategy_return(google_data_frame,split_value=len(X_train))
 
 
 def plot_shart(cum_symbol_return, cum_strategy_return, symbol):

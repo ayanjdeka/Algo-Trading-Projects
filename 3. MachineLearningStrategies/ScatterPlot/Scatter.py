@@ -22,12 +22,12 @@ def create_regression_trading_condition(df):
     Y = df[['Target']]
     return (df, X, Y)
 
-goog_data = load_financial_data(
-    start_date='2001-01-01',
-    end_date='2018-01-01',
-    output_file='goog_data_large.pkl')
+import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+google_data_frame = yf.download('GOOG', start = start_date, end = end_date)
 
-create_regression_trading_condition(goog_data)
+create_regression_trading_condition(google_data_frame)
 
-pd.plotting.scatter_matrix(goog_data[['Open-Close', 'High-Low', 'Target']], grid=True, diagonal='kde', alpha=0.5)
+pd.plotting.scatter_matrix(google_data_frame[['Open-Close', 'High-Low', 'Target']], grid=True, diagonal='kde', alpha=0.5)
 plt.show()

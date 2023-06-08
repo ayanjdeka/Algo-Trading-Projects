@@ -4,16 +4,10 @@ import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 
 from pandas_datareader import data
-
-def load_financial_data(start_date, end_date, output_file):
-    try:
-        df = pd.read_pickle(output_file)
-        print('File data found...reading GOOG data')
-    except FileNotFoundError:
-        print('File not found...downloading the GOOG data')
-        df = data.DataReader('GOOG', 'yahoo', start_date, end_date)
-        df.to_pickle(output_file)
-    return df
+import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+google_data_frame = yf.download('GOOG', start = start_date, end = end_date)
 
 def create_classification_trading_condition(df):
     df['Open-Close'] = df.Open - df.Close
@@ -35,12 +29,7 @@ def create_regression_trading_condition(df):
 def create_train_split_group(X, Y, split_ratio=0.8):
     return train_test_split(X, Y, shuffle=False, train_size=split_ratio)
 
-goog_data = load_financial_data(
-    start_date='2001-01-01',
-    end_date='2018-01-01',
-    output_file='goog_data_large.pkl')
-
-goog_data, X, Y = create_regression_trading_condition(goog_data)
+google_data_frame, X, Y = create_regression_trading_condition(google_data_frame)
 
 X_train,X_test,Y_train,Y_test=create_train_split_group(X,Y,split_ratio=0.8)
 
@@ -53,11 +42,11 @@ lasso.fit(X_train, Y_train)
 # The coefficients
 print('Coefficients: \n', lasso.coef_)
 
-goog_data['Predicted_Signal'] = lasso.predict(X)
-goog_data['GOOG_Returns'] = np.log(
-    goog_data['Close'] / goog_data['Close'].shift(1))
+google_data_frame['Predicted_Signal'] = lasso.predict(X)
+google_data_frame['GOOG_Returns'] = np.log(
+    google_data_frame['Close'] / google_data_frame['Close'].shift(1))
 
-print(goog_data.head())
+print(google_data_frame.head())
 def calculate_return(df, split_value, symbol):
     cum_goog_return = df[split_value:]['%s_Returns' % symbol].cumsum() * 100
     df['Strategy_Returns'] = df['%s_Returns' %
@@ -71,9 +60,9 @@ def calculate_strategy_return(df, split_value, symbol):
 
 
 cum_goog_return = calculate_return(
-    goog_data, split_value=len(X_train), symbol='GOOG')
+    google_data_frame, split_value=len(X_train), symbol='GOOG')
 cum_strategy_return = calculate_strategy_return(
-    goog_data, split_value=len(X_train), symbol='GOOG')
+    google_data_frame, split_value=len(X_train), symbol='GOOG')
 
 
 def plot_shart(cum_symbol_return, cum_strategy_return, symbol):
