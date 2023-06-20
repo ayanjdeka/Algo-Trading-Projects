@@ -7,11 +7,13 @@ start_date = '2014-01-01'
 end_date = '2018-01-01'
 SRC_DATA_FILENAME=SYMBOL + '_data.pkl'
 
-try:
-  data = pd.read_pickle(SRC_DATA_FILENAME)
-except FileNotFoundError:
-  data = data.DataReader(SYMBOL, 'yahoo', start_date, end_date)
-  data.to_pickle(SRC_DATA_FILENAME)
+import yfinance as yf
+start_date = '2018-01-01'
+end_date = '2023-01-01'
+data = yf.download('GOOG', start = start_date, end = end_date)
+data.to_pickle((SRC_DATA_FILENAME))
+
+
 
 NUM_PERIODS_FAST = 20
 K_FAST = 2 / (NUM_PERIODS_FAST +1)
