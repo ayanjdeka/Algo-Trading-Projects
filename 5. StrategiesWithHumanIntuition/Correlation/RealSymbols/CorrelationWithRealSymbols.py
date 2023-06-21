@@ -14,6 +14,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from statsmodels.tsa.stattools import coint
 import seaborn
+import yfinance as yf
 
 
 from pandas_datareader import data
@@ -26,13 +27,14 @@ def load_financial_data(symbols, start_date, end_date,output_file):
         df = pd.read_pickle(output_file)
         print('File data found...reading symbols data')
     except FileNotFoundError:
-        print('File not found...downloading the symbols data')
-        df = data.DataReader(symbols, 'yahoo', start_date, end_date)
+
+
+        df = yf.download(symbols, start = start_date, end = end_date)
         df.to_pickle(output_file)
     return df
 
 data=load_financial_data(symbolsIds,start_date='2001-01-01',
-                    end_date = '2018-01-01',
+                    end_date = '2023-01-01',
                     output_file='multi_data_large.pkl')
 
 

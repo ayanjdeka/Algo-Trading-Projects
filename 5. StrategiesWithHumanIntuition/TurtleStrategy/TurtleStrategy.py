@@ -3,20 +3,18 @@ import pandas as pd
 import numpy as np
 from pandas_datareader import data
 import matplotlib.pyplot as plt
+import yfinance as yf
 
-def load_financial_data(start_date, end_date,output_file):
-    try:
-        df = pd.read_pickle(output_file)
-        print('File data found...reading GOOG data')
-    except FileNotFoundError:
-        print('File not found...downloading the GOOG data')
-        df = data.DataReader('GOOG', 'yahoo', start_date, end_date)
-        df.to_pickle(output_file)
+def load_financial_data(symbol, start_date, end_date,output_file):
+    
+
+    df = yf.download(symbol, start = start_date, end = end_date)
+    df.to_pickle(output_file)
     return df
 
-goog_data=load_financial_data(start_date='2001-01-01',
-                    end_date = '2018-01-01',
-                    output_file='goog_data.pkl')
+data=load_financial_data('GOOG',start_date='2018-01-01',
+                    end_date = '2023-01-01',
+                    output_file='multi_data_large.pkl')
 
 def turtle_trading(financial_data, window_size):
     signals = pd.DataFrame(index = financial_data.index)
@@ -56,21 +54,21 @@ def turtle_trading(financial_data, window_size):
 
     return signals
 
-ts=turtle_trading(goog_data, 50)
+ts=turtle_trading(data, 50)
 
 fig = plt.figure()
 ax1 = fig.add_subplot(111, ylabel='Google price in $')
-goog_data["Adj Close"].plot(ax=ax1, color='g', lw=.5)
+data["Adj Close"].plot(ax=ax1, color='g', lw=.5)
 ts["high"].plot(ax=ax1, color='g', lw=.5)
 ts["low"].plot(ax=ax1, color='r', lw=.5)
 ts["avg"].plot(ax=ax1, color='b', lw=.5)
 
 ax1.plot(ts.loc[ts.orders == 1.0].index,
-goog_data["Adj Close"][ts.orders == 1.0],
+data["Adj Close"][ts.orders == 1.0],
 '^', markersize = 7, color = 'k')
 
 ax1.plot(ts.loc[ts.orders == -1.0].index,
-goog_data["Adj Close"][ts.orders == -1.0],
+data["Adj Close"][ts.orders == -1.0],
 'v', markersize = 7, color = 'k')
 
 plt.legend(["Price","Highs","Lows","Average","Buy","Sell"])
