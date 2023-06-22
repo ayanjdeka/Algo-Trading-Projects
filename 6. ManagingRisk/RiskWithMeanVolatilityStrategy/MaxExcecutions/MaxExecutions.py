@@ -1,7 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-results = pd.read_csv('volatility_adjusted_mean_reversion.csv')
+results = pd.read_csv('volatility_adjusted_mean_reversion_strategy_GOOG.csv')
 
 num_days = len(results.index)
 
