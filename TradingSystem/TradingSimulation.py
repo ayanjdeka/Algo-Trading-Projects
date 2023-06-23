@@ -1,4 +1,5 @@
-from TradingSystem.LiquidityProvider import LiquidityProvider
+import sys
+import LiquidityProvider
 from TradingSystem.TradingStrategy import TradingStrategy
 from TradingSystem.MarketSimulator import MarketSimulator
 from TradingSystem.OrderManager import OrderManager
